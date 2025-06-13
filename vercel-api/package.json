@@ -1,0 +1,14 @@
+{
+  "name": "hustleplug-pro-validation",
+  "version": "1.0.0",
+  "description": "Enhanced Pro Key Validation API for HustlePlug Chrome Extension",
+  "main": "api/validate-key.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "generate-hashes": "node generate-hashes.js"
+  },
+  "keywords": ["chrome-extension", "pro-validation", "membership"],
+  "author": "HustlePlug",
+  "license": "MIT"
+} 
