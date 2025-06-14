@@ -2,6 +2,60 @@
 // Handles modification of existing scheduled prompts
 const { hashKey, updateSchedule } = require('../../lib/scheduleManager.js');
 
+/**
+ * Validate schedule pattern (supports both basic and custom patterns)
+ * @param {string|Object} schedule - Schedule pattern to validate
+ * @returns {Object} - Validation result
+ */
+function validateSchedulePattern(schedule) {
+    const basicPatterns = ['daily', 'weekly', 'hourly'];
+    
+    // Check if it's a basic pattern
+    if (basicPatterns.includes(schedule)) {
+        return { isValid: true };
+    }
+    
+    // Check if it's a custom schedule object
+    if (typeof schedule === 'object' && schedule !== null) {
+        if (!schedule.type) {
+            return { isValid: false, error: 'Custom schedule must have a type' };
+        }
+        
+        switch (schedule.type) {
+            case 'specific-times':
+                if (!schedule.times || !Array.isArray(schedule.times) || schedule.times.length === 0) {
+                    return { isValid: false, error: 'Specific times schedule must have at least one time' };
+                }
+                if (!schedule.days || !Array.isArray(schedule.days) || schedule.days.length === 0) {
+                    return { isValid: false, error: 'Specific times schedule must have at least one day selected' };
+                }
+                return { isValid: true };
+            case 'interval':
+                if (!schedule.value || schedule.value < 1) {
+                    return { isValid: false, error: 'Interval schedule must have a positive value' };
+                }
+                if (!schedule.unit || !['minutes', 'hours', 'days'].includes(schedule.unit)) {
+                    return { isValid: false, error: 'Interval schedule must have a valid unit (minutes, hours, days)' };
+                }
+                return { isValid: true };
+            case 'cron':
+                if (!schedule.expression || typeof schedule.expression !== 'string') {
+                    return { isValid: false, error: 'Cron schedule must have a valid expression' };
+                }
+                // Basic cron validation (5 or 6 parts)
+                const cronParts = schedule.expression.trim().split(/\s+/);
+                if (cronParts.length < 5 || cronParts.length > 6) {
+                    return { isValid: false, error: 'Cron expression must have 5 or 6 parts' };
+                }
+                return { isValid: true };
+            default:
+                return { isValid: false, error: 'Invalid custom schedule type' };
+        }
+    }
+    
+    return { isValid: false, error: 'Invalid schedule pattern. Supported: daily, weekly, hourly, or custom object' };
+}
+
 // Pro Keys Database (reuse from validate-key.js pattern)
 const enhancedProKeys = {
     // Hash of 'pro_demo_key_12345'
@@ -95,10 +149,10 @@ function handler(req, res) {
         
         // Validate schedule pattern if being updated
         if (updates.schedule) {
-            const validPatterns = ['daily', 'weekly', 'hourly'];
-            if (!validPatterns.includes(updates.schedule)) {
+            const validationResult = validateSchedulePattern(updates.schedule);
+            if (!validationResult.isValid) {
                 res.status(400).json({ 
-                    error: 'Invalid schedule pattern. Supported: daily, weekly, hourly' 
+                    error: validationResult.error
                 });
                 return;
             }

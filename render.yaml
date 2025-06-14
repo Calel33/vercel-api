@@ -51,6 +51,7 @@ services:
   - type: cron
     name: hustleplug-schedule-executor
     env: node
+    plan: free
     buildCommand: |
       echo "=== CRON BUILD DEBUG INFO ==="
       pwd
