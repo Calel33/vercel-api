@@ -1,0 +1,25 @@
+{
+  "name": "hustleplug-pro-validation",
+  "version": "1.0.0",
+  "description": "Enhanced Pro Key Validation API for HustlePlug Chrome Extension with Scheduling",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "generate-hashes": "node generate-hashes.js",
+    "cron": "node cron-trigger.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.7.0"
+  },
+  "keywords": ["chrome-extension", "pro-validation", "membership", "scheduling"],
+  "author": "HustlePlug",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
