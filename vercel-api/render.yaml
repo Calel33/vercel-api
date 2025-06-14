@@ -4,8 +4,8 @@ services:
     name: hustleplug-api
     env: node
     plan: free
-    buildCommand: cd vercel-api && npm install
-    startCommand: cd vercel-api && node server.js
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -19,9 +19,9 @@ services:
     name: schedule-executor
     env: node
     plan: free
-    buildCommand: cd vercel-api && npm install
+    buildCommand: npm install
     schedule: "*/15 * * * *"
-    startCommand: cd vercel-api && npm run cron
+    startCommand: npm run cron
     envVars:
       - key: NODE_ENV
         value: production
@@ -34,4 +34,4 @@ services:
         fromService:
           type: web
           name: hustleplug-api
-          envVarKey: CRON_SECRET 
+          envVarKey: CRON_SECRET RET 
