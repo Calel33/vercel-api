@@ -4,6 +4,7 @@ services:
     name: hustleplug-api
     env: node
     plan: free
+    rootDir: .
     buildCommand: npm install
     startCommand: node server.js
     envVars:
@@ -19,6 +20,7 @@ services:
     name: schedule-executor
     env: node
     plan: free
+    rootDir: .
     buildCommand: npm install
     schedule: "*/15 * * * *"
     startCommand: npm run cron
@@ -34,4 +36,4 @@ services:
         fromService:
           type: web
           name: hustleplug-api
-          envVarKey: CRON_SECRET RET 
+          envVarKey: CRON_SECRET
