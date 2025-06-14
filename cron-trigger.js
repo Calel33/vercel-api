@@ -4,7 +4,13 @@ const fetch = require('node-fetch');
 
 async function triggerScheduleExecution() {
     try {
-        const apiUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+        console.log('🔍 Environment Debug:');
+        console.log('📊 API_BASE_URL:', process.env.API_BASE_URL);
+        console.log('📊 CRON_SECRET:', process.env.CRON_SECRET ? '[SET]' : '[NOT SET]');
+        console.log('📊 NODE_ENV:', process.env.NODE_ENV);
+        
+        // Fallback to Render web service URL if environment variable not set
+        const apiUrl = process.env.API_BASE_URL || 'https://hustleplug-scheduling-api.onrender.com';
         const cronSecret = process.env.CRON_SECRET || 'development-secret';
         
         console.log(`🕐 Triggering schedule execution at ${new Date().toISOString()}`);
