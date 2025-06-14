@@ -1,7 +1,7 @@
 services:
   # Main API Service
   - type: web
-    name: hustleplug-api
+    name: hustleplug-scheduling-api
     env: node
     plan: free
     buildCommand: ls -la && pwd && npm install
@@ -10,13 +10,13 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000
+        value: 3000
       - key: CRON_SECRET
         generateValue: true
 
   # Cron Job Service for Schedule Execution
   - type: cron
-    name: schedule-executor
+    name: hustleplug-schedule-executor
     env: node
     plan: free
     buildCommand: ls -la && pwd && npm install
@@ -28,10 +28,10 @@ services:
       - key: API_BASE_URL
         fromService:
           type: web
-          name: hustleplug-api
+          name: hustleplug-scheduling-api
           property: host
       - key: CRON_SECRET
         fromService:
           type: web
-          name: hustleplug-api
+          name: hustleplug-scheduling-api
           envVarKey: CRON_SECRET RET 
